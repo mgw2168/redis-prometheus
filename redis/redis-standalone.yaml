@@ -1,0 +1,78 @@
+---
+apiVersion: redis.redis.opstreelabs.in/v1beta1
+kind: Redis
+metadata:
+  name: redis-standalone
+  namespace: redis-standalone
+spec:
+  redisConfig:
+     additionalRedisConfig: redisexternalconfig
+  kubernetesConfig:
+    image: mgw2168/redis:v6.2.5
+    imagePullPolicy: IfNotPresent
+    resources:
+      requests:
+        cpu: 101m
+        memory: 128Mi
+      limits:
+        cpu: 101m
+        memory: 128Mi
+    # redisSecret:
+    #   name: redis-secret
+    #   key: password
+    # imagePullSecrets:
+    #   - name: regcred
+  redisExporter:
+    enabled: true
+    image: mgw2168/redis-exporter:1.0
+    imagePullPolicy: IfNotPresent
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 100m
+        memory: 128Mi
+# Environment Variables for Redis Exporter
+    # env:
+    # - name: REDIS_EXPORTER_INCL_SYSTEM_METRICS
+    #   value: "true"
+    # - name: UI_PROPERTIES_FILE_NAME
+    #   valueFrom:
+    #     configMapKeyRef:
+    #       name: game-demo
+    #       key: ui_properties_file_name
+    # - name: SECRET_USERNAME
+    #   valueFrom:
+    #     secretKeyRef:
+    #       name: mysecret
+    #       key: username
+  storage:
+    volumeClaimTemplate:
+      spec:
+        # storageClassName: standard
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi
+  # nodeSelector:
+  #   kubernetes.io/hostname: minikube
+  # securityContext: {}
+  # priorityClassName:
+  # affinity:
+  # Tolerations: []
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: redis-standalone
+  name: redisexternalconfig
+data:
+  redis-external.conf: |
+    tcp-keepalive 400
+    slowlog-max-len 158
+    stream-node-max-bytes 2048
+    io-threads 8
+    io-threads-do-reads yes
+    maxmemory 536870912
