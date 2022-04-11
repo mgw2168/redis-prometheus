@@ -2,8 +2,9 @@
 redisOperator:
   name: redis-operator
   imageName: mgw2168/redis-operator
-  imageTag: v0.10.0
+  imageTag: v0.1.0
   imagePullPolicy: Always
+  imagePrefix: docker.io
 
   # Additional pod annotations
   podAnnotations: {}

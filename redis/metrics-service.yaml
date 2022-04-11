@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-metrics-service
+  namespace: redis-cluster
+spec:
+  selector:
+    redis_setup_type: cluster
+  ports:
+    - protocol: TCP
+      port: 9121
+      targetPort: 9121
+  type: ClusterIP

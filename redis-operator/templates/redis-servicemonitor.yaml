@@ -2,21 +2,15 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: prometheus-redis-cluster-monitoring
-  namespace: dmp-system
+  name: redis-cluster-monitoring
+  namespace: {{ .Release.Namespace }}
   labels:
-    app: kube-prometheus-stack-redis-exporter
-    app.kubernetes.io/instance: lasertag
-    app.kubernetes.io/managed-by: Helm
-    app.kubernetes.io/part-of: kube-prometheus-stack
-    app.kubernetes.io/version: 16.12.2
-    chart: kube-prometheus-stack-16.12.2
-    heritage: Helm
-    release: lasertag
+    redis-operator: "true"
+    env: production
 spec:
   selector:
     matchLabels:
-      redis_setup_type: standalone
+      redis_setup_type: cluster
   namespaceSelector:
     any: true
   endpoints:
